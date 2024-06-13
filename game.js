@@ -264,7 +264,7 @@ class Game {
 	return {...result, loserInfo: this.loserInfo};
     }
     processInputNoWinner({player, input}) {
-	if (input.action === 'pass' && this.actions < 3) {
+	if (input.action === 'pass' && this.actions < 3 && player === this.player) {
 	    this.pass();
 	    return {
 		valid: true,
