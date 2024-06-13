@@ -15,7 +15,7 @@ function getConfig(settings) {
 	    'blocked': {
 		tint: 0x000000,
 		alpha: 0.3,
-		scale: 0.9,
+		scale: 0.5,
 	    },
 	    'dot': {
 		tint: 0xffffff,
@@ -28,7 +28,7 @@ function getConfig(settings) {
 		scale: 1.0,
 	    },
 	    'lava': {
-		tint: 0x883333,
+		tint: 0xaa3333,
 		alpha: 0.8,
 		scale: 1.0,
 	    },
