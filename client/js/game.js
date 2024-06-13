@@ -192,7 +192,7 @@ class MainScene extends Phaser.Scene {
 	timed.sequence({
 	    caller: (what, when) => this.time.delayedCall(when, what, [], this),
 	    timeline: [
-		timed.pause(500),
+		//timed.pause(500),
 		() => this.message({text: '3', duration: 1000}),
 		timed.pause(500),
 		() => this.message({text: '2', duration: 1000}),
