@@ -160,6 +160,36 @@ class Game {
 		});
 	    },
 	};
+	this.checkLoss = {
+	    burned: pos => {
+		const burned = this.effects.get(pos) === 'lava';
+		return burned;
+	    },
+	    walled: pos => {
+		const offsets = [
+		    {row: -1, col: -1},
+		    {row: 1, col: 1},
+		    {row: 1, col: -1},
+		    {row: -1, col: 1},
+		    
+		    {row: 1, col: 0},
+		    {row: 0, col: 1},
+		    {row: -1, col: 0},
+		    {row: 0, col: -1},
+		];
+
+		const walled = offsets.every(offset => {
+		    const checkPos = {
+			row: pos.row + offset.row,
+			col: pos.col + offset.col,
+		    };
+		    const blocked = this.effects.get(checkPos) === 'wall' || this.units.get(checkPos);
+		    return blocked;
+		});
+		return walled;
+	    },
+	};
+	this.loserInfo = false;
 
 	this.init();
     }
@@ -181,9 +211,9 @@ class Game {
 	    value: new HQueen({players: [1]}),
 	});
 
-	this.units.keys().forEach(pos => {
-	    this.effects.set({key: pos, value: 'wall'});
-	});
+	//this.units.keys().forEach(pos => {
+	//    this.effects.set({key: pos, value: 'wall'});
+	//});
 
 	this.effectPlacer.box({
 	    from: {row: 0, col: 0},
@@ -204,6 +234,7 @@ class Game {
 	};
     }
     getValidClicks(player) {
+	if (this.loserInfo) {return [];}
 	if (this.actions === 3) {
 	    let valid = this.validations['select'](player);
 	    if (this.selected) {
@@ -222,6 +253,12 @@ class Game {
 	this.selected = null;
     }
     processInput({player, input}) {
+	if (this.loserInfo) {return {valid: false};}
+	const result = this.processInputNoWinner({player, input});
+	this.loserInfo = this.getLoserInfo();
+	return {...result, loserInfo: this.loserInfo};
+    }
+    processInputNoWinner({player, input}) {
 	if (input.action === 'pass' && this.actions < 3) {
 	    this.pass();
 	    return {
@@ -242,8 +279,8 @@ class Game {
 	    };
 	}
 	if (action === 'move') {
-	    this.effects.set({key: input.pos, value: 'wall'});
-	    //this.effects.set({key: this.selected, value: 'wall'}); // Eye
+	    //this.effects.set({key: input.pos, value: 'wall'});
+	    this.effects.set({key: this.selected, value: 'wall'}); // Eye
 	    
 	    const unit = this.units.get(this.selected);
 	    this.units.remove(this.selected);
@@ -263,6 +300,27 @@ class Game {
 	    };
 	}
     }
+    getLoserInfo() {
+	const current = [];
+	const opponent = [];
+	this.units.keys().forEach(pos => {
+	    const unit = this.units.get(pos);
+	    const currentPlayer = unit.players.length === 1 && unit.players[0] === this.player;
+	    const opponentPlayer = unit.players.length === 1 && unit.players[0] === 1 - this.player;
+	    if (currentPlayer) {current.push(pos);}
+	    if (opponentPlayer) {opponent.push(pos);}
+	});
+
+	for (const pos of opponent) {
+	    if (this.checkLoss.walled(pos)) {return {pos, reason: 'walled', player: 1 - this.player};}
+	}
+	for (const pos of current) {
+	    if (this.checkLoss.walled(pos)) {return {pos, reason: 'walled', player: this.player};}
+	}
+	for (const pos of opponent) {
+	    if (this.checkLoss.burned(pos)) {return {pos, reason: 'burned', player: 1 - this.player};}
+	}
+    }
     getEffects() {
 	const effects = new StringyDict();
 	this.effects.keys().filter(({row, col}) => {
@@ -271,7 +329,7 @@ class Game {
 	    effects.set({key: pos, value: this.effects.get(pos)});
 	});
 	return effects;
-    }
+    }    
 }
 
 module.exports = {

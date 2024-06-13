@@ -110,6 +110,7 @@ const clientCommands = { // Client's interface
     },
     gameInput: (input, {clientId}) => {
 	const result = rooms.processInput({clientId, input});
+	console.log(result);
     },
     gameReady: (_, {clientId}) => {
 	rooms.setReady(clientId);
