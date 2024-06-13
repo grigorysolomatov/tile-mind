@@ -18,7 +18,7 @@ const serverCommands = { // Server's interface
 	game.setEffects(effects);
     },
     alert(message) {
-	alert(message);
+	setTimeout(() => alert(message), 1000);
     }
 };
 export class Server { // Wrapper around socket

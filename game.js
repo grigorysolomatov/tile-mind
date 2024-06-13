@@ -166,6 +166,11 @@ class Game {
 		return burned;
 	    },
 	    walled: pos => {
+		const unit = this.units.get(pos);
+		const valid = unit.getValidMoves({pos, units: this.units, effects: this.effects});
+		const stuck = valid.length === 0;
+		return stuck;
+		// -------------------------------------------------------------
 		const offsets = [
 		    {row: -1, col: -1},
 		    {row: 1, col: 1},
