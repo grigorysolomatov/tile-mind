@@ -14,7 +14,7 @@ function getConfig(settings) {
 	states: {
 	    'blocked': {
 		tint: 0x000000,
-		alpha: 0.2,
+		alpha: 0.3,
 		scale: 0.9,
 	    },
 	    'dot': {
