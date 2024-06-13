@@ -17,6 +17,9 @@ const serverCommands = { // Server's interface
     setEffects: (effects) => {
 	game.setEffects(effects);
     },
+    alert(message) {
+	alert(message);
+    }
 };
 export class Server { // Wrapper around socket
     constructor(socket) {

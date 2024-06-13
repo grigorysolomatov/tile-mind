@@ -110,7 +110,15 @@ const clientCommands = { // Client's interface
     },
     gameInput: (input, {clientId}) => {
 	const result = rooms.processInput({clientId, input});
-	console.log(result);
+	// ---------------------------------------------------------------------
+	if (!result.loserInfo) {return;}
+	const players  = rooms.getPlayerIds(clientId).map(playerId => clients.getBy.clientId[playerId]);
+	const playerSockets = players.map(player => sockets.getBy.socketId[player.socketId]);
+	playerSockets.forEach(socket => {
+	    const winner = players[1 - result.loserInfo.player];	    
+	    const message = `${winner.name} wins!`;
+	    socket.emit('alert', message);
+	});
     },
     gameReady: (_, {clientId}) => {
 	rooms.setReady(clientId);

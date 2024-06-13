@@ -140,6 +140,11 @@ function setReady(clientId) {
     const room = rooms.getBy.roomId[player.roomId];
     room.setReady(clientId);
 }
+function getPlayerIds(playerId) {
+    const client = clients.getBy.clientId[playerId];
+    const room = rooms.getBy.roomId[client.roomId];
+    return room.playerIds;
+}
 
 module.exports = {
     startRoom,
@@ -147,4 +152,5 @@ module.exports = {
     processInput,
     getValidClicks,
     setReady,
+    getPlayerIds,
 };
