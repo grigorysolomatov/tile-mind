@@ -1,0 +1,281 @@
+import * as collections from './collections.js';
+import * as timed from './timed.js';
+
+function getConfig(settings) {
+    const window = {
+	width: 700,
+	height: 700,
+	color: '#132',
+    };
+    const tile = {
+	image: 'tile',
+	height: 55,
+	width: 55,	
+	states: {
+	    'enabled': {
+		tint: 0x338855,
+		alpha: 1.0,
+		scale: 1.0,
+	    },
+	    'hover': {
+		tint: 0x339955,
+		alpha: 1.0,
+		scale: 1.2,
+	    },
+	    'dot': {
+		tint: 0xffffff,
+		alpha: 0.0,
+		scale: 0.0,
+	    },
+	},
+	startState: 'dot',
+    };
+    const screenCover = {
+	height: window.height,
+	width: window.width,
+	depth: 999,
+	image: 'screenCover',
+	states: {
+	    'visible': {
+		tint: 0x113322,
+		alpha: 1.0,
+		scale: 1.0,
+	    },
+	    'invisible': {
+		tint: 0x113322,
+		alpha: 0.0,
+		scale: 1.0,
+	    }
+	},
+	startState: 'visible',
+    };
+    const board = {
+	nrows: settings.nrows,
+	ncols: settings.ncols,
+	step: 62,
+	tile,
+    };
+    const message = {
+	//text: 'Fight!',
+	textStyle: { font: '128px Georgia', fill: '#44ff88' },
+	//depth: 999,
+	states: {
+	    'visible': {
+		tint: 0xffffff,
+		alpha: 1.0,
+		scale: 1.0,
+	    },
+	    'invisible': {
+		tint: 0xffffff,
+		alpha: 0.0,
+		scale: 1.0,
+	    },
+	},
+	startState: 'visible',
+    };
+    
+    const config = {
+	window,
+	tile,
+	screenCover,
+	board,
+	message,
+    };
+    return config;
+}
+class MainScene extends Phaser.Scene {
+    constructor({config}) {
+	super({ key: 'MainScene' });
+	this.config = config;
+    }
+    preload() {
+	this.load.image('tile', 'assets/tile.svg');
+	this.load.image('screenCover', 'assets/screenCover.svg');
+    }
+    create() {
+	const board = new Board({
+	    scene: this,
+	    x: 0.5*this.config.window.width,
+	    y: 0.5*this.config.window.height,
+	    config: this.config.board,
+	});
+	timed.sequence({
+	    caller: (what, when) => this.time.delayedCall(when, what, [], this),
+	    timeline: [
+		timed.pause(500),
+		() => this.message({text: '3', duration: 1000}),
+		timed.pause(500),
+		() => this.message({text: '2', duration: 1000}),
+		timed.pause(500),
+		() => this.message({text: '1', duration: 1000}),
+		timed.pause(500),
+		() => this.message({text: 'Fight!', duration: 1500}),
+		timed.pause(500),
+		() => board.forEachTile(({row, col}) => {
+		    const tile = board.tiles.getByKey({row, col});
+		    const fadeInTile = () => tile.state.to({
+			    state: 'enabled',
+			    duration: 1000,
+			    ease: 'Quint.Out',
+			});
+		    const center = {
+			row: Math.floor(0.5*this.config.board.nrows),
+			col: Math.floor(0.5*this.config.board.ncols),
+		    };
+		    const dist = Math.abs(row-center.row) + Math.abs(col - center.col);
+		    this.time.delayedCall(50*dist, fadeInTile, [], this);
+		}),
+		timed.pause(500),
+		() => {
+		    board.forEachTile(({row, col}) => {
+			const tile = board.tiles.getByKey({row, col});
+			tile.sprite.setInteractive();
+			tile.sprite.on('pointerover', () => {
+			    tile.state.to({
+				state: 'hover',
+				duration: 200,
+				ease: 'Quint.Out',
+			    });
+			});
+			tile.sprite.on('pointerout', () => {
+			    tile.state.to({
+				state: 'enabled',
+				duration: 200,
+				ease: 'Quint.Out',
+			    });
+			});
+			tile.sprite.on('pointerdown', () => {
+			    gameInput.setPos({row, col});
+			});
+		    });
+		},
+	    ]});
+    }
+    message({text, duration}) {
+	const message = new Sprite({
+	    scene: this,
+	    text: text,
+	    x: 0.5*this.config.window.width,
+	    y: 0.5*this.config.window.height,
+	    config: this.config.message,
+	});
+	message.state.to({
+	    state: 'invisible',
+	    duration: duration,
+	    ease: 'Quint.Out',
+	    onComplete: () => message.sprite.destroy(),
+	});
+    }
+}
+class Sprite {
+    constructor({scene, x, y, config, text}) {
+	//const image = (text) ? Sprite.text2image({scene, config, text}) : config.image;
+	if (text) {
+	    this.sprite = scene.add.text(x, y, text, config.textStyle).setOrigin(0.5);
+	    config.width = this.sprite.width;
+	    config.height = this.sprite.height;
+	}
+	else {
+	    this.sprite = scene.add.sprite(x, y, config.image)
+	}
+	this.sprite.setDisplaySize(config.width, config.height);
+	this.sprite.depth = config.depth || 1;
+	
+	this.state = new VisState({
+	    sprite: this.sprite,
+	    states: config.states,
+	    start: config.startState,
+	});
+    }
+}
+class VisState {
+    constructor({sprite, states, start}) {
+	this.sprite = sprite;
+	this.state = start;
+	this.states = states;
+
+	this.originalScale = this.sprite.scale;
+
+	this.toInstant(start);
+    }
+    toInstant(state) {
+	this.sprite.setTint(this.states[state].tint);
+	this.sprite.alpha = this.states[state].alpha;
+	this.sprite.scale = this.states[state].scale*this.originalScale;
+
+	this.state = state;
+    }
+    to({state, duration, onComplete, ease='Linear'}) {
+	const prevState = this.states[this.state];
+	const nextState = this.states[state];
+	
+	// Tween tint ----------------------------------------------------------
+	const startColor = Phaser.Display.Color.ValueToColor(prevState.tint);
+	const endColor = Phaser.Display.Color.ValueToColor(nextState.tint);
+	
+	this.sprite.scene.tweens.addCounter({
+            from: 0,
+            to: 100,
+            duration: duration,
+            ease: ease,
+            onUpdate: tween => {
+		var value = tween.getValue();
+		var color = Phaser.Display.Color.Interpolate.ColorWithColor(startColor, endColor, 100, value);
+		this.sprite.setTint(Phaser.Display.Color.GetColor(color.r, color.g, color.b));
+            }
+	});
+	// Tween alpha ---------------------------------------------------------
+	this.sprite.scene.tweens.add({
+            targets: this.sprite,
+            alpha: nextState.alpha,
+            scale: nextState.scale*this.originalScale,
+            ease,
+            duration,
+	    onComplete,
+	});
+	
+	// Update state --------------------------------------------------------
+	this.state = state;
+    }
+}
+class Board {
+    constructor({scene, x, y, config}) {
+	this.config = config;
+	this.tiles = new collections.StringyDict();
+	
+	const {nrows, ncols, step} = config;
+	
+	this.forEachTile(({row, col}) => {
+	    const tile = new Sprite({
+		scene: scene,
+		x: x - ncols*step*0.5 + step*0.5 + col*step,
+		y: y - nrows*step*0.5 + step*0.5 + row*step,
+		config: config.tile,
+	    });	    
+	    this.tiles.setByKey({
+		key: {row, col},
+		value: tile,
+	    });
+	});	
+    }
+    forEachTile(func) {
+	for (let i = 0; i < this.config.nrows; i++) {
+	    for (let j = 0; j < this.config.ncols; j++) {
+		func({row: i, col: j});
+	    }
+	}
+    }
+}
+
+export function start({settings}) {
+    const config = getConfig(settings);
+    const game = new Phaser.Game({
+	type: Phaser.WEBGL,
+	width: config.window.width,
+	height: config.window.height,
+	backgroundColor: config.window.color,
+	transparent: true,
+	scene: new MainScene({config}),
+	parent: 'phaser-window',
+    });
+}

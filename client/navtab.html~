@@ -1,0 +1,5 @@
+<div class="tight">
+  <button class="tab">Home</button>
+  <button class="tab">Client</button>
+  <button class="tab">Yo</button>
+</div>

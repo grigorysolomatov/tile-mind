@@ -1,0 +1,21 @@
+<h1 id="game-opponents">Not in game</h1>
+<div class="h-stack stretch">
+  <div id="control-panel">
+    <button class="panel-action" onclick="gameInput.setAction('spawn')">A</button>
+    <button class="panel-action" onclick="gameInput.setAction('grow')">B</button>
+    <button class="panel-action">C</button>
+    <button class="panel-action">D</button>
+    <br>
+    <button class="panel-action">E</button>
+    <button class="panel-action">F</button>
+    <button class="panel-action">G</button>
+    <button class="panel-action">H</button>
+    <br>
+    <button class="panel-action">I</button>
+    <button class="panel-action">J</button>
+    <button class="panel-action">K</button>
+    <button class="panel-action">L</button>
+  </div>
+
+      <div id="phaser-window"></div>
+    </div>       
