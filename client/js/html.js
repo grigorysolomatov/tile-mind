@@ -1,12 +1,28 @@
-export function includeAllPages({selector, attribute}) {
-    document.querySelectorAll(selector).forEach(element => {
-	const otherHtmlFile = element.getAttribute(attribute);
-	fetch(otherHtmlFile)
+// GPT -------------------------------------------------------------------------
+export function include({selector, attribute}) {
+    const promises = Array.from(document.querySelectorAll(selector)).map(element => {
+        const otherHtmlFile = element.getAttribute(attribute);
+        return fetch(otherHtmlFile)
             .then(response => response.text())
             .then(data => {
 		element.innerHTML = data;
             })
             .catch(error => console.error('Error loading content:', error));
+    });
+
+    return Promise.all(promises);
+}
+// -----------------------------------------------------------------------------
+
+export function includeOld({selector, attribute}) {
+    document.querySelectorAll(selector).forEach(element => {
+	const otherHtmlFile = element.getAttribute(attribute);
+	fetch(otherHtmlFile)
+	    .then(response => response.text())
+	    .then(data => {
+		element.innerHTML = data;
+	    })
+	    .catch(error => console.error('Error loading content:', error));
     });
 }
 export class PageFlip {

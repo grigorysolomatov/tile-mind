@@ -26,10 +26,19 @@ async function main() {
     // -------------------------------------------------------------------------
     
     pageFlip.to('page-home');
-    html.includeAllPages({
+    const promise = html.include({
 	selector: '.include',
-	attribute: 'page',
+	attribute: 'src',
     });
+    //    promise.then(() => { // Think about this!
+    //	const overlay = document.getElementById('overlay');
+    //    	overlay.style.display = 'flex';
+    //    });
+    
+    //    setTimeout(() => {
+    //	const overlay = document.getElementById('overlay');
+    //	overlay.style.display = 'flex';
+    //    }, 500)   
 
     // Get own client data -----------------------------------------------------
     const client = await server.getResponse({type: 'getData', details: 'client'});

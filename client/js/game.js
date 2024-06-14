@@ -46,9 +46,9 @@ function getConfig(settings) {
 		scale: 1.0,
 	    },
 	    'weak': {
-		tint: 0xffffff,
+		tint: 0xffff44,
 		alpha: 0.5,
-		scale: 1.0,
+		scale: 0.6,
 	    },
 	    'hover': {
 		tint: 0xffffff,
@@ -58,7 +58,7 @@ function getConfig(settings) {
 	    'faded': {
 		tint: 0xffffff,
 		alpha: 0.0,
-		scale: 0.9,
+		scale: 0.0,
 	    },
 	},
 	startState: 'faded',
