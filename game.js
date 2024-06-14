@@ -22,8 +22,8 @@ class King {
 	    return {row: pos.row + offset.row, col: pos.col + offset.col};
 	});	
 	const unoccupied = candidates.filter(pos => !units.get(pos));
-	const unwalled = unoccupied.filter(pos => effects.get(pos) !== 'wall');
-	return unwalled;
+	const unstuck = unoccupied.filter(pos => effects.get(pos) !== 'wall');
+	return unstuck;
     }
 }
 class Knight {
@@ -47,8 +47,8 @@ class Knight {
 	    return {row: pos.row + offset.row, col: pos.col + offset.col};
 	});	
 	const unoccupied = candidates.filter(pos => !units.get(pos));
-	const unwalled = unoccupied.filter(pos => effects.get(pos) !== 'wall');
-	return unwalled;
+	const unstuck = unoccupied.filter(pos => effects.get(pos) !== 'wall');
+	return unstuck;
     }
 }
 class HQueen {
@@ -161,40 +161,18 @@ class Game {
 	    },
 	};
 	this.checkLoss = {
-	    burned: pos => {
-		const burned = this.effects.get(pos) === 'lava';
-		return burned;
+	    burn: pos => {
+		const burn = this.effects.get(pos) === 'lava';
+		return burn;
 	    },
-	    walled: pos => {
+	    stuck: pos => {
 		const unit = this.units.get(pos);
 		const valid = unit.getValidMoves({pos, units: this.units, effects: this.effects});
 		const stuck = valid.length === 0;
-		return stuck;
-		// -------------------------------------------------------------
-		const offsets = [
-		    {row: -1, col: -1},
-		    {row: 1, col: 1},
-		    {row: 1, col: -1},
-		    {row: -1, col: 1},
-		    
-		    {row: 1, col: 0},
-		    {row: 0, col: 1},
-		    {row: -1, col: 0},
-		    {row: 0, col: -1},
-		];
-
-		const walled = offsets.every(offset => {
-		    const checkPos = {
-			row: pos.row + offset.row,
-			col: pos.col + offset.col,
-		    };
-		    const blocked = this.effects.get(checkPos) === 'wall' || this.units.get(checkPos);
-		    return blocked;
-		});
-		return walled;
+		return stuck;		
 	    },
 	};
-	this.loserInfo = false;
+	this.loserInfo = null;
 
 	this.init();
     }
@@ -260,10 +238,19 @@ class Game {
     processInput({player, input}) {
 	if (this.loserInfo) {return {valid: false};}
 	const result = this.processInputNoWinner({player, input});
-	this.loserInfo = this.getLoserInfo();
+	this.loserInfo = this.loserInfo || this.getLoserInfo(); // Maybe resigned
 	return {...result, loserInfo: this.loserInfo};
     }
     processInputNoWinner({player, input}) {
+	if (input.action === 'resign') {
+	    this.loserInfo = {
+		reason: 'resign', player: this.player
+	    };
+	    return {
+		valid: true,
+		action: 'resign',
+	    };
+	}
 	if (input.action === 'pass' && this.actions < 3 && player === this.player) {
 	    this.pass();
 	    return {
@@ -317,13 +304,13 @@ class Game {
 	});
 
 	for (const pos of opponent) {
-	    if (this.checkLoss.walled(pos)) {return {pos, reason: 'walled', player: 1 - this.player};}
+	    if (this.checkLoss.stuck(pos)) {return {pos, reason: 'stuck', player: 1 - this.player};}
 	}
 	for (const pos of current) {
-	    if (this.checkLoss.walled(pos)) {return {pos, reason: 'walled', player: this.player};}
+	    if (this.checkLoss.stuck(pos)) {return {pos, reason: 'stuck', player: this.player};}
 	}
 	for (const pos of opponent) {
-	    if (this.checkLoss.burned(pos)) {return {pos, reason: 'burned', player: 1 - this.player};}
+	    if (this.checkLoss.burn(pos)) {return {pos, reason: 'burn', player: 1 - this.player};}
 	}
     }
     getEffects() {
