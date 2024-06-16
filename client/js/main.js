@@ -17,28 +17,25 @@ async function main() {
 	    'ready': () => server.gameReady(),
 	},
     });
+    const popup = new html.PopUp({
+	parent: 'popup',
+	content: 'popup-content',
+	visible: 'visible',
+    });
 
     // Globals -----------------------------------------------------------------
     window.pageFlip = pageFlip;
     window.ui = ui;
     window.gameInput = gameInput;
     window.server = server;
+    window.popup = popup;
     // -------------------------------------------------------------------------
     
-    pageFlip.to('page-home');
-    const promise = html.include({
+    pageFlip.to('page-home');    
+    await html.include({
 	selector: '.include',
-	attribute: 'src',
-    });
-    //    promise.then(() => { // Think about this!
-    //	const overlay = document.getElementById('overlay');
-    //    	overlay.style.display = 'flex';
-    //    });
-    
-    //    setTimeout(() => {
-    //	const overlay = document.getElementById('overlay');
-    //	overlay.style.display = 'flex';
-    //    }, 500)   
+	attribute: 'from',
+    }); // Need await here? Maybe for popup loading
 
     // Get own client data -----------------------------------------------------
     const client = await server.getResponse({type: 'getData', details: 'client'});

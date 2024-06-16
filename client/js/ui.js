@@ -1,4 +1,4 @@
-export class UiBindings { // Expozes js to html
+export class UiBindings { // Exposes js to html
     constructor(server) {
 	this.server = server;
     }

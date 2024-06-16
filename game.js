@@ -244,7 +244,7 @@ class Game {
     processInputNoWinner({player, input}) {
 	if (input.action === 'resign') {
 	    this.loserInfo = {
-		reason: 'resign', player: this.player
+		reason: 'resign', player
 	    };
 	    return {
 		valid: true,

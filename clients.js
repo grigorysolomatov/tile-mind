@@ -115,9 +115,18 @@ const clientCommands = { // Client's interface
 	const players  = rooms.getPlayerIds(clientId).map(playerId => clients.getBy.clientId[playerId]);
 	const playerSockets = players.map(player => sockets.getBy.socketId[player.socketId]);
 	playerSockets.forEach(socket => {
-	    const winner = players[1 - result.loserInfo.player];	    
-	    const message = `${winner.name} wins!`;
-	    socket.emit('alert', message);
+	    const winner = players[1 - result.loserInfo.player];
+	    const loser = players[result.loserInfo.player];
+	    const reason = {
+		burn: 'burned',
+		stuck: 'got stuck',
+		resign: 'resigned',
+	    }[result.loserInfo.reason];	    
+	    const htmlContent = [
+		`<h3>${winner.name} wins!</h3>`,
+		`<p>${loser.name} ${reason}<p>`
+	    ];
+	    socket.emit('alert', htmlContent);
 	});
     },
     gameReady: (_, {clientId}) => {
