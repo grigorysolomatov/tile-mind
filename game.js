@@ -176,6 +176,9 @@ class Game {
 
 	this.init();
     }
+    isOver() {
+	return this.loserInfo !== null;
+    }
     init() {
 	this.units.set({
 	    key: {row: 1, col: 1},
@@ -209,7 +212,7 @@ class Game {
 	    effect: 'wall',
 	});
     }
-    getState() {
+    getState() { // TODO: why does this not return effects?
 	return {
 	    units: this.units.dict,
 	    player: this.player,
@@ -217,7 +220,7 @@ class Game {
 	};
     }
     getValidClicks(player) {
-	if (this.loserInfo) {return [];}
+	if (this.isOver()) {return [];}
 	if (this.actions === 3) {
 	    let valid = this.validations['select'](player);
 	    if (this.selected) {
@@ -236,7 +239,7 @@ class Game {
 	this.selected = null;
     }
     processInput({player, input}) {
-	if (this.loserInfo) {return {valid: false};}
+	if (this.isOver()) {return {valid: false};}
 	const result = this.processInputNoWinner({player, input});
 	this.loserInfo = this.loserInfo || this.getLoserInfo(); // Maybe resigned
 	return {...result, loserInfo: this.loserInfo};
@@ -312,6 +315,7 @@ class Game {
 	for (const pos of opponent) {
 	    if (this.checkLoss.burn(pos)) {return {pos, reason: 'burn', player: 1 - this.player};}
 	}
+	return null;
     }
     getEffects() {
 	const effects = new StringyDict();

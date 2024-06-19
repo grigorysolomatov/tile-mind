@@ -1,155 +1,6 @@
 import * as collections from './collections.js';
 import * as timed from './timed.js';
-
-function getConfig(settings) {
-    const window = {
-	width: 700,
-	height: 700,
-	color: '#132',
-    };
-    const tile = {
-	image: 'tile',
-	height: 55,
-	width: 55,	
-	states: {
-	    'blocked': {
-		tint: 0x000000,
-		alpha: 0.3,
-		scale: 0.5,
-	    },
-	    'dot': {
-		tint: 0xffffff,
-		alpha: 0.0,
-		scale: 0.0,
-	    },
-	    'wall': {
-		tint: 0x338855,
-		alpha: 1.0,
-		scale: 1.0,
-	    },
-	    'lava': {
-		tint: 0xaa3333,
-		alpha: 0.8,
-		scale: 1.0,
-	    },
-	},
-	startState: 'dot',
-    };
-    const select = {
-	image: 'select',
-	height: 55,
-	width: 55,	
-	states: {
-	    'strong': {
-		tint: 0xffffff,
-		alpha: 1.0,
-		scale: 1.0,
-	    },
-	    'weak': {
-		tint: 0xffff44,
-		alpha: 0.5,
-		scale: 0.6,
-	    },
-	    'hover': {
-		tint: 0xffffff,
-		alpha: 1.0,
-		scale: 1.1,
-	    },
-	    'faded': {
-		tint: 0xffffff,
-		alpha: 0.0,
-		scale: 0.0,
-	    },
-	},
-	startState: 'faded',
-    };
-    const screenCover = {
-	height: window.height,
-	width: window.width,
-	depth: 999,
-	image: 'screenCover',
-	states: {
-	    'visible': {
-		tint: 0x113322,
-		alpha: 1.0,
-		scale: 1.0,
-	    },
-	    'invisible': {
-		tint: 0x113322,
-		alpha: 0.0,
-		scale: 1.0,
-	    }
-	},
-	startState: 'visible',
-    };
-    const board = {
-	nrows: settings.nrows,
-	ncols: settings.ncols,
-	step: 62,
-    };
-    const message = {
-	//text: 'Fight!',
-	textStyle: { font: '128px Georgia', fill: '#44ff88' },
-	//depth: 999,
-	states: {
-	    'visible': {
-		tint: 0xffffff,
-		alpha: 1.0,
-		scale: 1.0,
-	    },
-	    'invisible': {
-		tint: 0xffffff,
-		alpha: 0.0,
-		scale: 1.0,
-	    },
-	},
-	startState: 'visible',
-    };
-    const unit = ({players, type}) => {
-	const colorFunc = (players) => {
-	    if (players.length === 1) {
-		if (players[0] === 0) {return 0xff4444;}
-		if (players[0] === 1) {return 0x0088ff;}		
-	    }
-	    return 0x44cc44;
-	};
-	const color = colorFunc(players);
-	return {
-	    image: type,
-	    height: 45,
-	    width: 45,	
-	    states: {
-		'normal': {
-		    tint: color,
-		    alpha: 1.0,
-		    scale: 1.0,
-		},
-		'hover': {
-		    tint: color,
-		    alpha: 1.0,
-		    scale: 1.2,
-		},
-		'dot': {
-		    tint: color,
-		    alpha: 0.0,
-		    scale: 0.0,
-		},
-	    },
-	    startState: 'dot',
-	};
-    };
-    
-    const config = {
-	window,
-	tile,
-	select,
-	screenCover,
-	board,
-	message,
-	unit,
-    };
-    return config;
-}
+import * as styles from '../styles/game.js';
 
 class MainScene extends Phaser.Scene {
     constructor(config) {
@@ -166,7 +17,6 @@ class MainScene extends Phaser.Scene {
 	this.load.image('king', 'assets/king.svg');	
     }
     create() {
-	//console.log(this.config.tile)
 	const tileBoard = new Board({
 	    scene: this,
 	    x: 0.5*this.config.window.width,
@@ -284,7 +134,7 @@ class MainScene extends Phaser.Scene {
 	    scene: this,
 	    x: tile.sprite.x,
 	    y: tile.sprite.y,
-	    config: this.config.unit(object),//{...this.config.tile, image: 'hqueen'},
+	    config: this.config.unit(object),
 	});
 	sprite.state.to({
 	    state: 'normal',
@@ -457,11 +307,13 @@ class Board {
 }
 
 let scene = null;
+let game = null;
 export function start({settings, state}) {
-    const config = getConfig(settings);
+    const config = styles.getConfig(settings);
 
     scene = new MainScene(config);
-    const game = new Phaser.Game({
+    if (game) {game.destroy(true);}
+    game = new Phaser.Game({
 	type: Phaser.WEBGL,
 	width: config.window.width,
 	height: config.window.height,
@@ -476,7 +328,7 @@ export function start({settings, state}) {
 	units.keys().forEach(key => {
 	    scene.spawn({pos: key, object: units.get(key)});
 	});
-	scene.setValidClicks(scene.validClicks); // Hack for propper strength/weakness of valid clicks
+	scene.setValidClicks(scene.validClicks); // Hack for proper strength/weakness of valid clicks
 	gameInput.runAction('ready');
 	//server.gameReady();
     });

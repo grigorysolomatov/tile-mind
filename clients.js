@@ -61,7 +61,7 @@ const clientCommands = { // Client's interface
 	displayClients();
 	broadcastAllClients(io);
     },
-    getData: ({key}, {clientId, callback}) => {
+    getData: ({key}, {clientId, callback}) => { // Delete this
 	let response = null;
 	if (key === 'client') {
 	    const client = clients.getBy.clientId[clientId];
@@ -72,7 +72,7 @@ const clientCommands = { // Client's interface
 	}
 	callback(response);
     },
-    getResponse: ({type, details}, {clientId, callback}) => {
+    getResponse: ({type, details}, {clientId, callback, io}) => {
 	// {type, details} = request
 	let response = null;
 	if (type === 'getData') {
@@ -83,14 +83,16 @@ const clientCommands = { // Client's interface
 	    if (details === 'allClients') {
 		response = clients.getAll().map(client => client.name);
 	    }
-	    //if (details === 'validClicks') {
-		//response = rooms.getValidClicks(clientId);
-	    //}
+	}
+	if (type === 'setData') {
+	    const client = clients.getBy.clientId[clientId];
+	    client.name = details.name;
+	    response = {success: true, name: client.name};
+	    broadcastAllClients(io);
 	}
 	if (type === 'processInput') {
 	    response = rooms.processInput({clientId, input: details});
-	}
-	
+	}	
 	callback(response);
     },
     playRandom: (_, {clientId}) => {
@@ -105,8 +107,9 @@ const clientCommands = { // Client's interface
 		wantToPlay.delete(cid);
 		return client;
 	    });
-	    rooms.startRoom(players);
-	}	
+	    const playerIds = players.map(player => player.clientId);
+	    rooms.startRoom(playerIds);
+	}
     },
     gameInput: (input, {clientId}) => {
 	const result = rooms.processInput({clientId, input});
@@ -129,6 +132,9 @@ const clientCommands = { // Client's interface
 	    socket.emit('alert', htmlContent);
 	});
     },
+    rematch: (_, {clientId}) => {
+	rooms.rematch(clientId);
+    },
     gameReady: (_, {clientId}) => {
 	rooms.setReady(clientId);
     },
@@ -138,7 +144,7 @@ function displayClients() {
     const names = clients.getAll().map(c => c.name);
     const numClients = names.length;
     console.log(
-	`Clients (${numClients}):`,
+	`Clients(${numClients}):`,
 	names.join(', '),
     );
 }

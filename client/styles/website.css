@@ -1,23 +1,27 @@
-
 body {
     margin: 0;
     padding: 20px;
     overflow: hidden;
-    background-color: #132;
-    color: #4f8;
+    background-color: #243;
+    color: #fff;
 }
 /* ----------------------------------------------------------------------------- */
-div.v-stack {
-    display: flex;
-    flex-direction: column;
+input {
+    background-color: #243;
+    color: #fff;
+    border-color: #fff;
+    border-style: solid;
+    border-radius: 5px;
+    border-width: 1px;
 }
-div.h-stack {
-    display: flex;
-    flex-direction: row;
-    align-items: left;
+input:hover {
+    background-color: #253;
 }
-div.v-align {
-    align-items: flex-start; /* Align items by their top side */
+input:focus {
+    border-color: #fff;
+    outline: none;
+    border-width: 2px;
+    background-color: #253;
 }
 /* ----------------------------------------------------------------------------- */
 #popup {
@@ -44,8 +48,8 @@ div.v-align {
     margin: auto;
     border-radius: 5px;
     box-shadow: 0 0 10px #fff;
-    border: solid #4c6 2px;
-    background-color: #132;
+    border: solid #ccc 2px;
+    background-color: #243;
     border-radius: 10px;
 }
 #popup-content {
@@ -53,30 +57,33 @@ div.v-align {
 }
 /* ----------------------------------------------------------------------------- */
 button {
-    background-color: #132;
+    background-color: #243;
     border-width: 2px;
     border-radius: 10px;
-    border-color: #4c6;
-    color: #4c6;
+    border-color: #ccc;    
+    color: #ccc;
     font-size: 15px;
+    font-weight: bold;
     margin: 10px;
-    padding: 10px 20px;
+    padding: 5px 10px;
 }
 button:hover {
-    border-color: #4f8;
-    color: #4f8;
+    border-color: #fff;
+    background-color: #253;
+    color: #fff;
 }
 button.tab {
-    background-color: #132;
-    border-radius: 0px;
+    border-radius: 10px;
     border-width: 2px;
+    border-style: solid;
     margin: 1px;
     min-width: 85px;
     padding: 5px;
 }
 button.tab:hover {
-    border-color: #4f8;
-    color: #4f8;
+    border-color: #fff;
+    color: #fff;
+    background-color: #253;
 }
 button.panel-action {
     width: 50px;
@@ -90,7 +97,7 @@ button.panel-action {
 }
 #button-pass:hover {
     color: #000;
-    background-color: #ff0;
+    background-color: #fa0;
     transition: all 0.2s ease;
     transform: scale(1.05);
 }
@@ -104,22 +111,43 @@ button.panel-action {
     transition: all 0.2s ease;
     transform: scale(1.05);
 }
+#button-rematch {
+    font-weight: bold;
+    transition: all 0.2s ease;
+}
+#button-rematch:hover {
+    color: #000;
+    background-color: #4f8;
+    transition: all 0.2s ease;
+    transform: scale(1.05);
+}
 /* ----------------------------------------------------------------------------- */
+.v-stack {
+    display: flex;
+    flex-direction: column;
+}
+.h-stack {
+    display: flex;
+    flex-direction: row;
+    align-items: left;
+}
+.v-align {
+    align-items: flex-start; /* Align items by their top side */
+}
+.tight {
+    display: flex;
+}
 .bottom {
     margin-top: auto;
 }
 /* ----------------------------------------------------------------------------- */
-div.tight {
-    display: flex;
-}
-
 canvas {
-    border: solid #4c6 3px;
+    border: solid #ccc 3px;
     border-radius: 20px;
 }
 #control-panel {
     box-sizing: border-box;
-    border: solid #4c6 3px;
+    border: solid #ccc 3px;
     border-radius: 20px;
     height: 703px;
     margin-right: 20px;

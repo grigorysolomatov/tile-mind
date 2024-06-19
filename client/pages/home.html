@@ -1,4 +1,4 @@
 <h1>Home</h1>
-<p>Name: <span id="client-name">?</span></p>
+<p>Name: <input id="client-name" value="?" onkeydown="ui.blurName(event)" onblur="ui.onBlurName(event)"></input></p>
 <p>Players online: <span id="num-players">?</span></p>
 <button onclick="ui.playRandom()">Play</button>

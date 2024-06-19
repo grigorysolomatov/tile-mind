@@ -39,15 +39,10 @@ async function main() {
 
     // Get own client data -----------------------------------------------------
     const client = await server.getResponse({type: 'getData', details: 'client'});
-    document.getElementById('client-name').textContent = client.name;
-    // Get all clients, and subscribe to future broadcasting--------------------    
-    const setAllClients = (allClients) => {
-	document.getElementById('num-players').textContent = allClients.length;
-    };
-    //const allClients = await server.getData('allClients');
+    document.getElementById('client-name').value = client.name;
+    // Get all clients ---------------------------------------------------------    
     const allClients = await server.getResponse({type: 'getData', details: 'allClients'});
-    setAllClients(allClients);
-    server.on('allClients', setAllClients);
+    document.getElementById('num-players').textContent = allClients.length;
     // -------------------------------------------------------------------------
 }
 main();

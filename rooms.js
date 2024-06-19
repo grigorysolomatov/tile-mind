@@ -3,19 +3,40 @@ const { Indexer } = require('./indexer');
 const { StringyDict } = require('./collections');
 const game = require('./game');
 
+let clients = null;
+let sockets = null;
+const rooms = new Indexer({
+    roomId: room => room.roomId,
+});
+
 class Room {
     constructor({playerIds, settings, roomId}) {
 	this.playerIds = [...playerIds];
-	this.ready = [false, false];
+	this.ready = [false, false]; // Ready to receive valid clicks
+	this.wantsRematch = [false, false];
 	this.settings = settings;
-	this.roomId = roomId;
-	this.game = null;
+	this.roomId = roomId;	
     }
     start() {
+	this.ready = [false, false];
+	this.wantsRematch = [false, false];
+	
 	if (Math.random() < 0.5) { // Randomize first player
 	    this.playerIds = [this.playerIds[1], this.playerIds[0]];
 	}
 	this.game = new game.Game(this.settings);
+	
+	const players = this.playerIds.map(playerId => clients.getBy.clientId[playerId]);
+	
+	players.forEach(player => {player.roomId = this.roomId});
+	const playerSockets = players.map(player => sockets.getBy.socketId[player.socketId]);	
+	playerSockets.forEach((socket, i) => {
+	    socket.emit('startGame', {
+		opponent: players[1-i].name,
+		settings: this.settings,
+		gameState: this.game.getState(),
+	    });
+	});
     }
     processInput({playerId, input}) {
 	if (!this.game) {return;}
@@ -58,10 +79,20 @@ class Room {
     setReady(playerId) {
 	const playerIdx = this.playerIds.indexOf(playerId);
 	this.ready[playerIdx] = true;
-	if (this.ready[1-playerIdx]) {return;}
+	if (!this.ready[1-playerIdx]) {return;} // EYE should there be "!" ?
 
 	this.sendValidClicks();
 	this.sendEffects();
+    }
+    setWantsRematch(playerId) {
+	if (!this.game.isOver()) {return;}
+	
+	const playerIdx = this.playerIds.indexOf(playerId);
+	this.wantsRematch[playerIdx] = true;
+
+	if (!this.wantsRematch[1-playerIdx]) {return;}
+
+	this.start();
     }
     sendValidClicks() {
 	const players = this.playerIds.map(playerId => clients.getBy.clientId[playerId])
@@ -84,17 +115,13 @@ class Room {
     }
 }
 
-let clients = null;
-let sockets = null;
-const rooms = new Indexer({
-    roomId: room => room.roomId,
-});
-
 function init({clients: c, sockets: s}) { // Set clients & sockets
     clients = c;
     sockets = s;
 }
-function startRoom(players) {
+function startRoom(playerIds) {
+    const players = playerIds.map(playerId => clients.getBy.clientId[playerId]);
+    
     const room = new Room({
 	playerIds: players.map(player => player.clientId),
 	roomId: uuidv4(),
@@ -103,19 +130,8 @@ function startRoom(players) {
 	    ncols: 11,	    
 	},
     });
+    rooms.insert(room);        
     room.start();
-    const game = room.game;
-    rooms.insert(room);
-    
-    players.forEach(player => {player.roomId = room.roomId});
-    playerSockets = players.map(player => sockets.getBy.socketId[player.socketId]);
-    playerSockets.forEach((socket, i) => {
-	socket.emit('startGame', {
-	    opponent: players[1-i].name,
-	    settings: room.settings,
-	    gameState: game.getState(),
-	});
-    });
 }
 function processInput({clientId, input}) {
     const client = clients.getBy.clientId[clientId];
@@ -145,6 +161,11 @@ function getPlayerIds(playerId) {
     const room = rooms.getBy.roomId[client.roomId];
     return room.playerIds;
 }
+function rematch(playerId) {
+    const player = clients.getBy.clientId[playerId];
+    const room = rooms.getBy.roomId[player.roomId];
+    room.setWantsRematch(playerId);        
+}
 
 module.exports = {
     startRoom,
@@ -153,4 +174,5 @@ module.exports = {
     getValidClicks,
     setReady,
     getPlayerIds,
+    rematch,
 };

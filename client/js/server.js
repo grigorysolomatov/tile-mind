@@ -2,7 +2,7 @@ import * as game from './game.js';
 
 const serverCommands = { // Server's interface
     startGame: ({opponent, settings, gameState}) => {
-	const client = document.getElementById('client-name').textContent;
+	const client = document.getElementById('client-name').value;
 	
 	document.getElementById('game-opponents').textContent = `${client} vs ${opponent}`;
 	game.start({settings, state: gameState});
@@ -17,8 +17,11 @@ const serverCommands = { // Server's interface
     setEffects: (effects) => {
 	game.setEffects(effects);
     },
-    alert(htmlContent) {
+    alert: (htmlContent) => {
 	popup.show(htmlContent);
+    },
+    allClients: (allClients) => {
+	document.getElementById('num-players').textContent = allClients.length;
     }
 };
 export class Server { // Wrapper around socket
@@ -52,5 +55,8 @@ export class Server { // Wrapper around socket
     }
     gameReady() {
 	this.socket.emit('gameReady');
+    }
+    rematch() {
+	this.socket.emit('rematch');
     }
 }
