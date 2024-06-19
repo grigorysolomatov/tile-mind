@@ -240,11 +240,11 @@ class Game {
     }
     processInput({player, input}) {
 	if (this.isOver()) {return {valid: false};}
-	const result = this.processInputNoWinner({player, input});
+	const result = this._processInput({player, input});
 	this.loserInfo = this.loserInfo || this.getLoserInfo(); // Maybe resigned
 	return {...result, loserInfo: this.loserInfo};
     }
-    processInputNoWinner({player, input}) {
+    _processInput({player, input}) {
 	if (input.action === 'resign') {
 	    this.loserInfo = {
 		reason: 'resign', player
@@ -287,7 +287,10 @@ class Game {
 	    this.selected = input.pos;	    
 
 	    this.actions -= 1;
-	    if (this.actions < 1) {this.pass();}
+	    if (this.actions < 1) {
+		this.loserInfo = this.loserInfo || this.getLoserInfo();
+		this.pass();
+	    }
 	    
 	    return {
 		valid: true,
