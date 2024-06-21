@@ -56,7 +56,7 @@ class MainScene extends Phaser.Scene {
 		    const fadeInTile = () => {
 			if (tile.state.state !== 'dot') {return;}
 			tile.state.to({
-			    state: 'blocked',
+			    state: 'empty',
 			    duration: 1000,
 			    ease: 'Quint.Out',
 			})
@@ -74,7 +74,7 @@ class MainScene extends Phaser.Scene {
 			const tile = selectBoard.tiles.get(pos);
 			tile.sprite.setInteractive();
 			tile.sprite.on('pointerover', () => {
-			    //if (['blocked', 'wall'].includes(tile.state.state)) {return;}
+			    //if (['empty', 'wall'].includes(tile.state.state)) {return;}
 			    if (!this.validClicks.has(pos)) {return;}
 			    tile.state.to({
 				state: 'hover',

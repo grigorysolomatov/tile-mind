@@ -7,9 +7,9 @@ export function getConfig(settings) {
     const tile = {
 	image: 'tile',
 	height: 55,
-	width: 55,	
+	width: 55,
 	states: {
-	    'blocked': {
+	    'empty': {
 		tint: 0x000000,
 		alpha: 0.3,
 		scale: 0.5,
