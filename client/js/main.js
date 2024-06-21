@@ -13,8 +13,16 @@ async function main() {
 	behavior: {
 	    'click': pos => server.gameInput({action: 'click', pos}),
 	    'pass': () => server.gameInput({action: 'pass'}),
-	    'resign': () => server.gameInput({action: 'resign'}),
 	    'ready': () => server.gameReady(),
+	    'resign': async () => {
+		const response = await popup.show([
+		    '<h3>Resign?</h3>',
+		    '<button onclick="popup.resolve(\'popup\')">Confirm</button>',
+		    '<button onclick="popup.resolve(\'cancel\')">Cancel</button>',
+		]);
+		if (response === 'cancel') {return;}
+		server.gameInput({action: 'resign'});
+	    },
 	},
     });
     const popup = new html.PopUp({
@@ -35,7 +43,9 @@ async function main() {
     await html.include({
 	selector: '.include',
 	attribute: 'from',
-    }); // Need await here? Maybe for popup loading
+    }); // Need await here? Maybe for acknowledge loading
+
+    //popup.show(['Hello']);
 
     // Get own client data -----------------------------------------------------
     const client = await server.getResponse({type: 'getData', details: 'client'});

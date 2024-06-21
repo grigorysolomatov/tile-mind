@@ -29,12 +29,20 @@ export class PopUp {
 	this.parent = parent;
 	this.content = content;
 	this.visible = visible;
+	this.resolve = () => {};
     }
     show(innerHTML) {
 	const parent = document.getElementById(this.parent);
 	const content = document.getElementById(this.content);
 	content.innerHTML = innerHTML.join('\n');
 	parent.classList.add(this.visible);
+	
+	return new Promise((resolve, reject) => {
+	    this.resolve = (value) => {
+		this.hide();
+		resolve(value);
+	    };
+	});
     }
     hide() {
 	const parent = document.getElementById(this.parent);

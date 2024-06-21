@@ -18,6 +18,8 @@ const serverCommands = { // Server's interface
 	game.setEffects(effects);
     },
     alert: (htmlContent) => {
+	htmlContent.push('<button onclick="popup.resolve()">OK</button>');
+	console.log(htmlContent);
 	popup.show(htmlContent);
     },
     allClients: (allClients) => {

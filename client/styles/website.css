@@ -42,7 +42,7 @@ input:focus {
     opacity: 1;
     transition: all 1s ease;
 }
-#popup-container {
+#popup-content {
     padding: 20px;    
     text-align: center;
     margin: auto;
@@ -51,9 +51,6 @@ input:focus {
     border: solid #ccc 2px;
     background-color: #243;
     border-radius: 10px;
-}
-#popup-content {
-    margin: 20px;
 }
 /* ----------------------------------------------------------------------------- */
 button {

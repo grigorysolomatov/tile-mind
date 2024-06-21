@@ -127,7 +127,7 @@ const clientCommands = { // Client's interface
 	    }[result.loserInfo.reason];	    
 	    const htmlContent = [
 		`<h3>${winner.name} wins!</h3>`,
-		`<p>${loser.name} ${reason}<p>`
+		`<p>${loser.name} ${reason}</p>`
 	    ];
 	    socket.emit('alert', htmlContent);
 	});
