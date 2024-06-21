@@ -15,7 +15,7 @@ class Room {
 	this.ready = [false, false]; // Ready to receive valid clicks
 	this.wantsRematch = [false, false];
 	this.settings = settings;
-	this.roomId = roomId;	
+	this.roomId = roomId;
     }
     start() {
 	this.ready = [false, false];

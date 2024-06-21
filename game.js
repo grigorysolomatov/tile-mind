@@ -241,7 +241,7 @@ class Game {
     processInput({player, input}) {
 	if (this.isOver()) {return {valid: false};}
 	const result = this._processInput({player, input});
-	this.loserInfo = this.loserInfo || this.getLoserInfo(); // Maybe resigned
+	this.loserInfo = this.loserInfo || this.getLoserInfo(); // Maybe resigned, maybe made opponent stuck
 	return {...result, loserInfo: this.loserInfo};
     }
     _processInput({player, input}) {
