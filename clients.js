@@ -1,6 +1,7 @@
 const { v4: uuidv4 } = require('uuid');
 const { Indexer } = require('./indexer');
 const rooms = require('./rooms');
+const { Matcher } = require('./matcher');
 
 class Client { // Client data
     constructor({clientId, socketId, name, roomId=null}) {
@@ -46,7 +47,7 @@ const clients = new Indexer({
 const sockets = new Indexer({
     socketId: socket => socket.id,
 });
-const wantToPlay = new Set();
+const matcher = new Matcher();
 
 const clientCommands = { // Client's interface
     // command: (args, context) => {...},
@@ -54,7 +55,8 @@ const clientCommands = { // Client's interface
 	const client = clients.getBy.clientId[clientId];
 	const socket = sockets.getBy.socketId[client.socketId];
 	
-	wantToPlay.delete(client.clientId);
+	matcher.remove(client.clientId);
+	
 	sockets.remove(socket);
 	clients.remove(client);
 
@@ -95,37 +97,10 @@ const clientCommands = { // Client's interface
 	}	
 	callback(response);
     },
-    playRandomOld: (_, {clientId}) => {	
-	const client = clients.getBy.clientId[clientId];
-	const socket = sockets.getBy.socketId[client.socketId];
-
-	wantToPlay.add(client.clientId);
-	
-	while (wantToPlay.size >= 2) {
-	    const players = [...wantToPlay].slice(0, 2).map(cid => {
-		const client = clients.getBy.clientId[cid];
-		wantToPlay.delete(cid);
-		return client;
-	    });
-	    const playerIds = players.map(player => player.clientId);
-	    rooms.startRoom(playerIds);
-	}
-    },
     playRandom: ({groupTag}, {clientId}) => {
-	const client = clients.getBy.clientId[clientId];
-	const socket = sockets.getBy.socketId[client.socketId];
-
-	wantToPlay.add(client.clientId);
-	
-	while (wantToPlay.size >= 2) {
-	    const players = [...wantToPlay].slice(0, 2).map(cid => {
-		const client = clients.getBy.clientId[cid];
-		wantToPlay.delete(cid);
-		return client;
-	    });
-	    const playerIds = players.map(player => player.clientId);
-	    rooms.startRoom(playerIds);
-	}
+	matcher
+	    .add({id: clientId, tag: groupTag})
+	    .match(groupTag, (p1, p2) => rooms.startRoom([p1, p2]));	
     },
     gameInput: (input, {clientId}) => {
 	const result = rooms.processInput({clientId, input});
