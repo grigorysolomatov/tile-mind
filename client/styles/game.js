@@ -2,7 +2,7 @@ export function getConfig(settings) {
     const window = {
 	width: 700,
 	height: 700,
-	color: '#132',
+	color: '#fff',
     };
     const tile = {
 	image: 'tile',
@@ -16,19 +16,18 @@ export function getConfig(settings) {
 	    },
 	    'dot': {
 		tint: 0xffffff,
-		alpha: 0.0,
+		alpha: 1,
 		scale: 0.0,
 	    },
 	    'wall': {
-		//tint: 0x338855,
-		tint: 0x666666,
+		tint: 0x9babb2,
 		alpha: 1.0,
 		scale: 1.0,
 	    },
 	    'lava': {
-		tint: 0xaa3333,
-		alpha: 0.8,
-		scale: 1.0,
+		tint: 0xff4500,
+		alpha: 0.6,
+		scale: 0.8,
 	    },
 	},
 	startState: 'dot',
@@ -36,25 +35,25 @@ export function getConfig(settings) {
     const select = {
 	image: 'select',
 	height: 55,
-	width: 55,	
+	width: 55,
 	states: {
 	    'strong': {
-		tint: 0x44ff44,
+		tint: 0xffffff,
 		alpha: 1.0,
 		scale: 1.0,
 	    },
 	    'weak': {
-		tint: 0x44ff44,
-		alpha: 0.5,
-		scale: 0.6,
+		tint: 0xffffff,
+		alpha: 1,
+		scale: 0.5,
 	    },
 	    'hover': {
-		tint: 0x44ff44,
+		tint: 0xffffff,
 		alpha: 1.0,
 		scale: 1.1,
 	    },
 	    'faded': {
-		tint: 0x44ff44,
+		tint: 0xffffff,
 		alpha: 0.0,
 		scale: 0.0,
 	    },
@@ -85,8 +84,8 @@ export function getConfig(settings) {
     const unit = ({players, type}) => {
 	const colorFunc = (players) => {
 	    if (players.length === 1) {
-		if (players[0] === 0) {return 0xff4444;}
-		if (players[0] === 1) {return 0x0088ff;}		
+		if (players[0] === 0) {return 0xf9c22b;}
+		if (players[0] === 1) {return 0x4d9be6;}
 	    }
 	    if (players.length > 1) {return 0x44cc44;}
 	};
@@ -94,7 +93,7 @@ export function getConfig(settings) {
 	return {
 	    image: type,
 	    height: 45,
-	    width: 45,	
+	    width: 45,
 	    states: {
 		'normal': {
 		    tint: color,

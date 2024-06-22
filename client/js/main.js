@@ -1,13 +1,14 @@
 import * as html from './html.js';
 import * as serverModule from './server.js';
-import * as uiModule from './ui.js';
+//import * as uiModule from './ui.js';
+import * as ui from './ui.js';
 import * as input from './input.js';
 
 async function main() {
     const socket = io();
     const pageFlip = new html.PageFlip('.page');
     const server = new serverModule.Server(socket);
-    const ui = new uiModule.UiBindings(server);
+    //const ui = new uiModule.UiBindings(server);
     const gameInput = new input.GameInput({
 	defaultAction: 'click',
 	behavior: {

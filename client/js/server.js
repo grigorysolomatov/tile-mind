@@ -19,7 +19,6 @@ const serverCommands = { // Server's interface
     },
     alert: (htmlContent) => {
 	htmlContent.push('<button onclick="popup.resolve()">OK</button>');
-	console.log(htmlContent);
 	popup.show(htmlContent);
     },
     allClients: (allClients) => {
@@ -45,7 +44,8 @@ export class Server { // Wrapper around socket
 	this.socket.on(eventName, callback);
     }
     playRandom() {
-	this.socket.emit('playRandom');
+	const groupTag = document.getElementById('group-tag').value.trim();
+	this.socket.emit('playRandom', {groupTag});
     }
     gameInput(input) {
 	this.socket.emit('gameInput', input);

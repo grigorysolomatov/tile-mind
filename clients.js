@@ -95,7 +95,23 @@ const clientCommands = { // Client's interface
 	}	
 	callback(response);
     },
-    playRandom: (_, {clientId}) => {
+    playRandomOld: (_, {clientId}) => {	
+	const client = clients.getBy.clientId[clientId];
+	const socket = sockets.getBy.socketId[client.socketId];
+
+	wantToPlay.add(client.clientId);
+	
+	while (wantToPlay.size >= 2) {
+	    const players = [...wantToPlay].slice(0, 2).map(cid => {
+		const client = clients.getBy.clientId[cid];
+		wantToPlay.delete(cid);
+		return client;
+	    });
+	    const playerIds = players.map(player => player.clientId);
+	    rooms.startRoom(playerIds);
+	}
+    },
+    playRandom: ({groupTag}, {clientId}) => {
 	const client = clients.getBy.clientId[clientId];
 	const socket = sockets.getBy.socketId[client.socketId];
 

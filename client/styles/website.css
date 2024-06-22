@@ -2,26 +2,31 @@ body {
     margin: 0;
     padding: 20px;
     overflow: hidden;
-    background-color: #243;
-    color: #fff;
+    background-color: #2e222f;
+    color: #c7dcd0;
+    font-family: 'Liberation Sans';
+    font-size: 18px;
 }
 /* ----------------------------------------------------------------------------- */
 input {
-    background-color: #243;
-    color: #fff;
-    border-color: #fff;
+    background-color: #694f62;
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 10px;
+    border-color: #7f708a;
     border-style: solid;
     border-radius: 5px;
-    border-width: 1px;
+    border-width: 2px;
 }
 input:hover {
-    background-color: #253;
+    background-color: #905ea9;
 }
 input:focus {
     border-color: #fff;
     outline: none;
     border-width: 2px;
-    background-color: #253;
+    background-color: #905ea9;
 }
 /* ----------------------------------------------------------------------------- */
 #popup {
@@ -48,28 +53,29 @@ input:focus {
     margin: auto;
     border-radius: 5px;
     box-shadow: 0 0 10px #fff;
-    border: solid #ccc 2px;
-    background-color: #243;
+    border: solid #7f708a 2px;
+    background-color: #2e222f;
     border-radius: 10px;
 }
 /* ----------------------------------------------------------------------------- */
 button {
-    background-color: #243;
+    background-color: #694f62;
     border-width: 2px;
     border-radius: 10px;
-    border-color: #ccc;    
+    border-color: #7f708a;    
     color: #ccc;
-    font-size: 15px;
+    font-size: 18px;
     font-weight: bold;
     margin: 10px;
-    padding: 5px 10px;
+    padding: 10px 20px;
 }
 button:hover {
     border-color: #fff;
-    background-color: #253;
+    background-color: #905ea9;
     color: #fff;
 }
 button.tab {
+    font-size: 16px;
     border-radius: 10px;
     border-width: 2px;
     border-style: solid;
@@ -80,7 +86,7 @@ button.tab {
 button.tab:hover {
     border-color: #fff;
     color: #fff;
-    background-color: #253;
+    background-color: #905ea9;
 }
 button.panel-action {
     width: 50px;
@@ -94,7 +100,7 @@ button.panel-action {
 }
 #button-pass:hover {
     color: #000;
-    background-color: #fa0;
+    background-color: #f79617;
     transition: all 0.2s ease;
     transform: scale(1.05);
 }
@@ -104,7 +110,7 @@ button.panel-action {
 }
 #button-resign:hover {
     color: #000;
-    background-color: #f44;
+    background-color: #ae2334;
     transition: all 0.2s ease;
     transform: scale(1.05);
 }
@@ -114,7 +120,7 @@ button.panel-action {
 }
 #button-rematch:hover {
     color: #000;
-    background-color: #4f8;
+    background-color: #239063;
     transition: all 0.2s ease;
     transform: scale(1.05);
 }

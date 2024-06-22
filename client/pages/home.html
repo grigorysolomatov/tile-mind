@@ -1,4 +1,5 @@
 <h1>Home</h1>
-<p>Name: <input id="client-name" value="?" onkeydown="ui.blurName(event)" onblur="ui.onBlurName(event)"></input></p>
 <p>Players online: <span id="num-players">?</span></p>
-<button onclick="ui.playRandom()">Play</button>
+<p>Name: <input id="client-name" value="?" onkeydown="ui.blur(event)" onblur="ui.onBlurName(event)"></input></p>
+<p>Match tag: <input id="group-tag" value="" onkeydown="ui.blur(event)"></input></p>
+<button onclick="server.playRandom()">Play</button>
