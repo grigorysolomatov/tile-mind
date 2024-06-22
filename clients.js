@@ -63,44 +63,26 @@ const clientCommands = { // Client's interface
 	displayClients();
 	broadcastAllClients(io);
     },
-    getData: ({key}, {clientId, callback}) => { // Delete this
-	let response = null;
-	if (key === 'client') {
-	    const client = clients.getBy.clientId[clientId];
-	    response = {name: client.name, clientId: client.clientId};
-	}
-	if (key === 'allClients') {
-	    response = clients.getAll().map(client => client.name);
-	}
+    getAllClients: (_, {callback}) => {
+	const response = clients.getAll().map(client => client.name);
 	callback(response);
     },
-    getResponse: ({type, details}, {clientId, callback, io}) => {
-	// {type, details} = request
-	let response = null;
-	if (type === 'getData') {
-	    if (details === 'client') {
-		const client = clients.getBy.clientId[clientId];
-		response = {name: client.name, clientId: client.clientId};
-	    }
-	    if (details === 'allClients') {
-		response = clients.getAll().map(client => client.name);
-	    }
-	}
-	if (type === 'setData') {
-	    const client = clients.getBy.clientId[clientId];
-	    client.name = details.name;
-	    response = {success: true, name: client.name};
-	    broadcastAllClients(io);
-	}
-	if (type === 'processInput') {
-	    response = rooms.processInput({clientId, input: details});
-	}	
+    getClient: (_, {clientId, callback}) => {
+	const client = clients.getBy.clientId[clientId];
+	const response = {name: client.name, clientId: client.clientId};
+	callback(response);	
+    },
+    setName: ({name}, {clientId, callback, io}) => {
+	const client = clients.getBy.clientId[clientId];
+	client.name = name;
+	response = {success: true, name: client.name};
+	broadcastAllClients(io);
 	callback(response);
     },
     playRandom: ({groupTag}, {clientId}) => {
 	matcher
 	    .add({id: clientId, tag: groupTag})
-	    .match(groupTag, (p1, p2) => rooms.startRoom([p1, p2]));	
+	    .match(groupTag, (p1, p2) => rooms.startRoom([p1, p2]));
     },
     gameInput: (input, {clientId}) => {
 	const result = rooms.processInput({clientId, input});
@@ -166,7 +148,7 @@ function init(io) { // Subscribe to client events
 	displayClients();
 	broadcastAllClients(io);
 	//console.log(io.sockets.sockets.keys())
-    });    
+    });
 }
 
 module.exports = {

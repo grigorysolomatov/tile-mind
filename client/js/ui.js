@@ -6,6 +6,7 @@ export function blur(event) {
 
 export async function onBlurName(event) {
     const name = document.getElementById('client-name').value;
-    const result = await server.getResponse({type: 'setData', details: {name}});
+    //const result = await server.getResponse({type: 'setData', details: {name}});
+    const result = await server.setName(name);
     document.getElementById('client-name').value = result.name;
 }

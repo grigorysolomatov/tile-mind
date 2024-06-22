@@ -37,7 +37,7 @@ export class Server { // Wrapper around socket
     }
     getData(key) {
 	return new Promise((resolve, reject) => {
-	    this.socket.emit('getData', {key}, client => resolve(client));
+	    this.socket.emit('getData', {key}, resolve);
 	});
     }
     on(eventName, callback) {
@@ -50,9 +50,24 @@ export class Server { // Wrapper around socket
     gameInput(input) {
 	this.socket.emit('gameInput', input);
     }
+    getClient() {
+	return new Promise((resolve, reject) => {
+	    this.socket.emit('getClient', null, resolve);
+	});	
+    }
+    getAllClients() {
+	return new Promise((resolve, reject) => {
+	    this.socket.emit('getAllClients', null, resolve);
+	});	
+    }
+    setName(name) {
+	return new Promise((resolve, reject) => {
+	    this.socket.emit('setName', {name}, resolve);
+	});
+    }
     getResponse({type, details}) {
 	return new Promise((resolve, reject) => {
-	    this.socket.emit('getResponse', {type, details}, client => resolve(client));
+	    this.socket.emit('getResponse', {type, details}, resolve);
 	});
     }
     gameReady() {

@@ -8,7 +8,7 @@ let sockets = null;
 const rooms = new Indexer({
     roomId: room => room.roomId,
 });
-
+ 
 class Room {
     constructor({playerIds, settings, roomId}) {
 	this.playerIds = [...playerIds];

@@ -49,10 +49,11 @@ async function main() {
     //popup.show(['Hello']);
 
     // Get own client data -----------------------------------------------------
-    const client = await server.getResponse({type: 'getData', details: 'client'});
+    const client = await server.getClient();
     document.getElementById('client-name').value = client.name;
     // Get all clients ---------------------------------------------------------    
-    const allClients = await server.getResponse({type: 'getData', details: 'allClients'});
+    //const allClients = await server.getResponse({type: 'getData', details: 'allClients'});
+    const allClients = await server.getAllClients();
     document.getElementById('num-players').textContent = allClients.length;
     // -------------------------------------------------------------------------
 }
