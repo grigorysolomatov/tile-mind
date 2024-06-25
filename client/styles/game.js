@@ -95,8 +95,8 @@ export function getConfig(settings) {
 	const color = colorFunc(players);
 	return {
 	    image: type,
-	    height: 45,
-	    width: 45,
+	    height: 50,
+	    width: 50,
 	    states: {
 		'normal': {
 		    tint: color,
