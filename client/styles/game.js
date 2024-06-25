@@ -10,9 +10,10 @@ export function getConfig(settings) {
 	width: 55,
 	states: {
 	    'empty': {
-		tint: 0x000000,
+		image: 'empty',
+		tint: 0x888888,
 		alpha: 0.3,
-		scale: 0.5,
+		scale: 0.9,
 	    },
 	    'dot': {
 		tint: 0xffffff,
@@ -27,9 +28,9 @@ export function getConfig(settings) {
 	    },
 	    'lava': {
 		image: 'lava',
-		tint: 0xaa4444,
+		tint: 0xffffff,
 		alpha: 1.0,
-		scale: 0.8,
+		scale: 0.9,
 	    },
 	},
 	startState: 'dot',
@@ -42,17 +43,17 @@ export function getConfig(settings) {
 	    'strong': {
 		tint: 0x88ff88,
 		alpha: 1.0,
-		scale: 1.2,
+		scale: 1.0,
 	    },
 	    'weak': {
 		tint: 0x88ff88,
 		alpha: 1.0,
-		scale: 0.7,
+		scale: 0.8,
 	    },
 	    'hover': {
 		tint: 0x88ff88,
 		alpha: 1.0,
-		scale: 1.0,
+		scale: 1.2,
 	    },
 	    'faded': {
 		tint: 0x88ff88,

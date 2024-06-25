@@ -10,13 +10,14 @@ class MainScene extends Phaser.Scene {
     preload() {
 	this.load.image('select', 'assets/select.svg');
 	this.load.image('tile', 'assets/tile.svg');
+	this.load.image('empty', 'assets/empty.svg');	
 	this.load.image('screenCover', 'assets/screenCover.svg');
 	
 	this.load.image('hqueen', 'assets/hqueen.svg');
 	this.load.image('knight', 'assets/knight.svg');
 	this.load.image('king', 'assets/king.svg');
 
-	this.load.image('lava', 'assets/lava.png');
+	this.load.image('lava', 'assets/lava.png');	
     }
     create() {
 	const tileBoard = new Board({
