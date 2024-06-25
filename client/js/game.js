@@ -14,7 +14,9 @@ class MainScene extends Phaser.Scene {
 	
 	this.load.image('hqueen', 'assets/hqueen.svg');
 	this.load.image('knight', 'assets/knight.svg');
-	this.load.image('king', 'assets/king.svg');	
+	this.load.image('king', 'assets/king.svg');
+
+	this.load.image('lava', 'assets/lava.png');
     }
     create() {
 	const tileBoard = new Board({
@@ -74,7 +76,6 @@ class MainScene extends Phaser.Scene {
 			const tile = selectBoard.tiles.get(pos);
 			tile.sprite.setInteractive();
 			tile.sprite.on('pointerover', () => {
-			    //if (['empty', 'wall'].includes(tile.state.state)) {return;}
 			    if (!this.validClicks.has(pos)) {return;}
 			    tile.state.to({
 				state: 'hover',
@@ -135,7 +136,7 @@ class MainScene extends Phaser.Scene {
 	    x: tile.sprite.x,
 	    y: tile.sprite.y,
 	    config: this.config.unit(object),
-	});
+	});	
 	sprite.state.to({
 	    state: 'normal',
 	    duration: 1000,
@@ -212,46 +213,73 @@ class Sprite {
 	}
 	this.sprite.setDisplaySize(config.width, config.height);
 	this.sprite.depth = config.depth || 1;
-	
-	this.state = new VisState({
-	    sprite: this.sprite,
-	    states: config.states,
-	    start: config.startState,
+
+	this.config = config;
+	this.state = new VisState(this);
+    }
+    clone() {
+	const clone = new Sprite({
+	    scene: this.sprite.scene,
+	    x: this.sprite.x,
+	    y: this.sprite.y,
+	    config: this.config,
 	});
+	clone.state.toInstant(this.state.state);
+	return clone;
     }
 }
 class VisState {
-    constructor({sprite, states, start}) {
+    constructor(sprite) {
 	this.sprite = sprite;
-	this.state = start;
-	this.states = states;
+	this.state = sprite.config.startState;
+	this.states = sprite.config.states;
 	this.tweens = [];
 
-	this.originalScale = this.sprite.scale;
+	this.originalScale = this.sprite.sprite.scale;
 
-	this.toInstant(start);
+	this.toInstant(this.state);
     }
     toInstant(state) {
-	this.sprite.setTint(this.states[state].tint);
-	this.sprite.alpha = this.states[state].alpha;
-	this.sprite.scale = this.states[state].scale*this.originalScale;
+	this.sprite.sprite.setTint(this.states[state].tint);
+	this.sprite.sprite.alpha = this.states[state].alpha;
+	this.sprite.sprite.scale = this.states[state].scale*this.originalScale;
 
 	this.state = state;
     }
-    to({state, duration, onComplete, ease='Linear'}) {	
+    to({state, duration, onComplete, ease='Linear'}) {
 	this.tweens.forEach(tween => tween.stop());
 	this.tweens = [];
-	
+		
 	const prevState = this.states[this.state];
 	const nextState = this.states[state];
+	const scene = this.sprite.sprite.scene;
+
+	// Tween image -------------------------------------------------------
+	if (this.states[state].image !== this.states[this.state].image) {
+	    const clone = this.sprite.clone();
+
+	    console.log(nextState.scale*this.originalScale)
+	    scene.tweens.add({
+		targets: clone.sprite,
+		alpha: 0.0,
+		scale: nextState.scale*this.originalScale,
+		ease,
+		duration: duration,
+		onComplete: () => {clone.sprite.destroy()},
+	    });
+
+	    this.sprite.sprite.setTexture(this.states[state].image);
+	    this.sprite.sprite.setDisplaySize(this.sprite.config.height, this.sprite.config.width);
+	    this.originalScale = this.sprite.sprite.scale;
+	    
+	    this.sprite.sprite.scale = prevState.scale*this.originalScale;
+	    this.sprite.sprite.alpha = 0.0;
+	}
 	
 	// Tween tint ----------------------------------------------------------
-	//const startColor = Phaser.Display.Color.ValueToColor(prevState.tint);
-	//console.log(this.sprite.tintTopLeft)
-	const startColor = Phaser.Display.Color.ValueToColor(this.sprite.tintTopLeft);
-	const endColor = Phaser.Display.Color.ValueToColor(nextState.tint);
-	
-	const tween1 = this.sprite.scene.tweens.addCounter({
+	const startColor = Phaser.Display.Color.ValueToColor(this.sprite.sprite.tintTopLeft);
+	const endColor = Phaser.Display.Color.ValueToColor(nextState.tint);	
+	const tween1 = scene.tweens.addCounter({
             from: 0,
             to: 100,
             duration: duration,
@@ -259,12 +287,13 @@ class VisState {
             onUpdate: tween => {
 		var value = tween.getValue();
 		var color = Phaser.Display.Color.Interpolate.ColorWithColor(startColor, endColor, 100, value);
-		this.sprite.setTint(Phaser.Display.Color.GetColor(color.r, color.g, color.b));
+		this.sprite.sprite.setTint(Phaser.Display.Color.GetColor(color.r, color.g, color.b));
             }
 	});
+	
 	// Tween alpha & scale -------------------------------------------------
-	const tween2 = this.sprite.scene.tweens.add({
-            targets: this.sprite,
+	const tween2 = scene.tweens.add({
+            targets: this.sprite.sprite,
             alpha: nextState.alpha,
             scale: nextState.scale*this.originalScale,
             ease,

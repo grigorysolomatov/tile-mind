@@ -20,13 +20,15 @@ export function getConfig(settings) {
 		scale: 0.0,
 	    },
 	    'wall': {
+		image: 'tile',
 		tint: 0x9babb2,
 		alpha: 1.0,
 		scale: 1.0,
 	    },
 	    'lava': {
-		tint: 0xff4500,
-		alpha: 0.6,
+		image: 'lava',
+		tint: 0xaa4444,
+		alpha: 1.0,
 		scale: 0.8,
 	    },
 	},
@@ -38,17 +40,17 @@ export function getConfig(settings) {
 	width: 55,
 	states: {
 	    'strong': {
-		tint: 0xffffff,
+		tint: 0x44ff44,
 		alpha: 1.0,
 		scale: 1.0,
 	    },
 	    'weak': {
-		tint: 0xffffff,
+		tint: 0x44ff44,
 		alpha: 1,
 		scale: 0.5,
 	    },
 	    'hover': {
-		tint: 0xffffff,
+		tint: 0x44ff44,
 		alpha: 1.0,
 		scale: 1.1,
 	    },
