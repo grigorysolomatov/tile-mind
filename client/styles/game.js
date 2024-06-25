@@ -21,8 +21,8 @@ export function getConfig(settings) {
 		scale: 0.0,
 	    },
 	    'wall': {
-		image: 'tile',
-		tint: 0x9babb2,
+		image: 'wall',
+		tint: 0xffffff,
 		alpha: 1.0,
 		scale: 1.0,
 	    },

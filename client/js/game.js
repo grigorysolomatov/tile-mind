@@ -10,6 +10,7 @@ class MainScene extends Phaser.Scene {
     preload() {
 	this.load.image('select', 'assets/select.svg');
 	this.load.image('tile', 'assets/tile.svg');
+	this.load.image('wall', 'assets/wall.svg');
 	this.load.image('empty', 'assets/empty.svg');	
 	this.load.image('screenCover', 'assets/screenCover.svg');
 	
@@ -259,7 +260,6 @@ class VisState {
 	if (this.states[state].image !== this.states[this.state].image) {
 	    const clone = this.sprite.clone();
 
-	    console.log(nextState.scale*this.originalScale)
 	    scene.tweens.add({
 		targets: clone.sprite,
 		alpha: 0.0,
