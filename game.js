@@ -219,11 +219,11 @@ class Game {
 	    });
 
 	    this.units.set({
-		key: {row: Math.floor(this.nrows/2+1), col: Math.floor(this.ncols/2)},
+		key: {row: Math.floor(this.nrows/2-1), col: Math.floor(this.ncols/2)},
 		value: new HQueen({players: [0]}),
 	    });
 	    this.units.set({
-		key: {row: Math.floor(this.nrows/2-1), col: Math.floor(this.ncols/2)},
+		key: {row: Math.floor(this.nrows/2+1), col: Math.floor(this.ncols/2)},
 		value: new HQueen({players: [1]}),
 	    });
 	}			
