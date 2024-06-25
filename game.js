@@ -180,26 +180,53 @@ class Game {
 	return this.loserInfo !== null;
     }
     init() {
-	this.units.set({
-	    key: {row: 1, col: 1},
-	    value: new HQueen({players: [0]}),
-	});	
-	this.units.set({
-	    key: {row: this.nrows-2, col: this.nrows-2},
-	    value: new HQueen({players: [0]}),
-	});
-	this.units.set({
-	    key: {row: 1, col: this.ncols-2},
-	    value: new HQueen({players: [1]}),
-	});
-	this.units.set({
-	    key: {row: this.nrows-2, col: 1},
-	    value: new HQueen({players: [1]}),
-	});
+	if (false) {
+	    this.units.set({
+		key: {row: 1, col: 1},
+		value: new HQueen({players: [0]}),
+	    });	
+	    this.units.set({
+		key: {row: this.nrows-2, col: this.ncols-2},
+		value: new HQueen({players: [0]}),
+	    });	
+	    
+	    this.units.set({
+		key: {row: this.nrows-2, col: 1},
+		value: new HQueen({players: [1]}),
+	    });
+	    this.units.set({
+		key: {row: 1, col: this.ncols-2},
+		value: new HQueen({players: [1]}),
+	    });
+	}
+	else {
+	    this.units.set({
+		key: {row: 1, col: 1},
+		value: new HQueen({players: [0]}),
+	    });	
+	    this.units.set({
+		key: {row: 1, col: this.ncols-2},
+		value: new HQueen({players: [0]}),
+	    });	
+	    
+	    this.units.set({
+		key: {row: this.nrows-2, col: 1},
+		value: new HQueen({players: [1]}),
+	    });
+	    this.units.set({
+		key: {row: this.nrows-2, col: this.ncols-2},
+		value: new HQueen({players: [1]}),
+	    });
 
-	//this.units.keys().forEach(pos => {
-	//    this.effects.set({key: pos, value: 'wall'});
-	//});
+	    this.units.set({
+		key: {row: Math.floor(this.nrows/2+1), col: Math.floor(this.ncols/2)},
+		value: new HQueen({players: [0]}),
+	    });
+	    this.units.set({
+		key: {row: Math.floor(this.nrows/2-1), col: Math.floor(this.ncols/2)},
+		value: new HQueen({players: [1]}),
+	    });
+	}			
 
 	this.effectPlacer.box({
 	    from: {row: 0, col: 0},
