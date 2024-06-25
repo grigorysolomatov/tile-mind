@@ -40,22 +40,22 @@ export function getConfig(settings) {
 	width: 55,
 	states: {
 	    'strong': {
-		tint: 0x44ff44,
+		tint: 0x88ff88,
+		alpha: 1.0,
+		scale: 1.2,
+	    },
+	    'weak': {
+		tint: 0x88ff88,
+		alpha: 1.0,
+		scale: 0.7,
+	    },
+	    'hover': {
+		tint: 0x88ff88,
 		alpha: 1.0,
 		scale: 1.0,
 	    },
-	    'weak': {
-		tint: 0x44ff44,
-		alpha: 1,
-		scale: 0.5,
-	    },
-	    'hover': {
-		tint: 0x44ff44,
-		alpha: 1.0,
-		scale: 1.1,
-	    },
 	    'faded': {
-		tint: 0xffffff,
+		tint: 0x88ff88,
 		alpha: 0.0,
 		scale: 0.0,
 	    },
