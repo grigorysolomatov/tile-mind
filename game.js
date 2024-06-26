@@ -180,7 +180,8 @@ class Game {
 	return this.loserInfo !== null;
     }
     init() {
-	if (false) {
+	const size = 3;
+	if (size === 2) {
 	    this.units.set({
 		key: {row: 1, col: 1},
 		value: new HQueen({players: [0]}),
@@ -199,31 +200,30 @@ class Game {
 		value: new HQueen({players: [1]}),
 	    });
 	}
-	else {
-	    this.units.set({
-		key: {row: 1, col: 1},
-		value: new HQueen({players: [0]}),
-	    });	
-	    this.units.set({
-		key: {row: 1, col: this.ncols-2},
-		value: new HQueen({players: [0]}),
-	    });	
-	    
-	    this.units.set({
-		key: {row: this.nrows-2, col: 1},
-		value: new HQueen({players: [1]}),
-	    });
-	    this.units.set({
-		key: {row: this.nrows-2, col: this.ncols-2},
-		value: new HQueen({players: [1]}),
-	    });
-
-	    this.units.set({
-		key: {row: Math.floor(this.nrows/2-1), col: Math.floor(this.ncols/2)},
-		value: new HQueen({players: [0]}),
-	    });
+	else if (size === 3) {
 	    this.units.set({
 		key: {row: Math.floor(this.nrows/2+1), col: Math.floor(this.ncols/2)},
+		value: new HQueen({players: [0]}),
+	    });	
+	    this.units.set({
+		key: {row: Math.floor(this.nrows/2+1), col: Math.floor(this.ncols/2-1)},
+		value: new HQueen({players: [0]}),
+	    });
+	    this.units.set({
+		key: {row: Math.floor(this.nrows/2+1), col: Math.floor(this.ncols/2+1)},
+		value: new HQueen({players: [0]}),
+	    });
+	    
+	    this.units.set({
+		key: {row: Math.floor(this.nrows/2-1), col: Math.floor(this.ncols/2)},
+		value: new HQueen({players: [1]}),
+	    });
+	    this.units.set({
+		key: {row: Math.floor(this.nrows/2-1), col: Math.floor(this.ncols/2-1)},
+		value: new HQueen({players: [1]}),
+	    });	    
+	    this.units.set({
+		key: {row: Math.floor(this.nrows/2-1), col: Math.floor(this.ncols/2+1)},
 		value: new HQueen({players: [1]}),
 	    });
 	}			
