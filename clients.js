@@ -11,25 +11,27 @@ class Client { // Client data
 	this.roomId = roomId;
     }
     static randomName() {
-	const adjectives = [
-	    "Happy", "Sad", "Angry", "Excited", "Bored", "Tired", "Energetic", "Lazy", 
-	    "Brave", "Cowardly", "Curious", "Indifferent", "Optimistic", "Pessimistic", 
-	    "Friendly", "Hostile", "Generous", "Stingy", "Polite", "Rude", "Honest", 
-	    "Dishonest", "Loyal", "Disloyal", "Kind", "Mean", "Patient", "Impatient", 
-	    "Calm", "Nervous", "Confident", "Insecure", "Creative", "Unimaginative", 
-	    "Adventurous", "Cautious", "Ambitious", "Lazy", "Cheerful", "Gloomy", 
-	    "Diligent", "Careless", "Enthusiastic", "Apathetic", "Forgiving", "Resentful", 
-	    "Grateful", "Ungrateful",
-	];
-	const nouns = [
-	    "Ace", "Bear", "Champ", "Duke", "Flash", "Ghost", "Hawk", "Ivy", "Joker", 
-	    "King", "Lion", "Maverick", "Ninja", "Owl", "Panther", "Queen", "Raven", 
-	    "Shadow", "Tiger", "Viper", "Wolf", "Zephyr", "Blaze", "Cobra", "Dragon", 
-	    "Eagle", "Falcon", "Giant", "Hero", "Ice", "Jaguar", "Knight", "Legend", 
-	    "Mamba", "Noble", "Oracle", "Phoenix", "Quake", "Ranger", "Samurai", 
-	    "Titan", "Valkyrie", "Warrior", "Xenon", "Yeti", "Zorro", "Bandit", 
-	    "Captain", "Dynamo",
-	];
+	//const adjectives = [
+	//    "Happy", "Sad", "Angry", "Excited", "Bored", "Tired", "Energetic", "Lazy", 
+	//    "Brave", "Cowardly", "Curious", "Indifferent", "Optimistic", "Pessimistic", 
+	//    "Friendly", "Hostile", "Generous", "Stingy", "Polite", "Rude", "Honest", 
+	//    "Dishonest", "Loyal", "Disloyal", "Kind", "Mean", "Patient", "Impatient", 
+	//    "Calm", "Nervous", "Confident", "Insecure", "Creative", "Unimaginative", 
+	//    "Adventurous", "Cautious", "Ambitious", "Lazy", "Cheerful", "Gloomy", 
+	//    "Diligent", "Careless", "Enthusiastic", "Apathetic", "Forgiving", "Resentful", 
+	//    "Grateful", "Ungrateful",
+	//];	
+	//const nouns = [
+	//    "Ace", "Bear", "Champ", "Duke", "Flash", "Ghost", "Hawk", "Ivy", "Joker", 
+	//    "King", "Lion", "Maverick", "Ninja", "Owl", "Panther", "Queen", "Raven", 
+	//    "Shadow", "Tiger", "Viper", "Wolf", "Zephyr", "Blaze", "Cobra", "Dragon", 
+	//    "Eagle", "Falcon", "Giant", "Hero", "Ice", "Jaguar", "Knight", "Legend", 
+	//    "Mamba", "Noble", "Oracle", "Phoenix", "Quake", "Ranger", "Samurai", 
+	//    "Titan", "Valkyrie", "Warrior", "Xenon", "Yeti", "Zorro", "Bandit", 
+	//    "Captain", "Dynamo",
+	//];
+	const nouns = ["Brick", "Mortar", "Trowel", "Scaffold", "Blueprint", "Cement", "Plumb", "Level", "Hammer", "Nail", "Sledge", "Chisel", "Goggles", "Helmet", "Gloves", "Boots", "Wheelbarrow", "Mixer", "Bucket", "Tape", "Measure", "Ladder", "Drill", "Screw", "Bolt", "Wrench", "Saw", "Blade", "Dust", "Mask", "Grit", "Grout", "Tile", "Panel", "Stud", "Beam", "Joist", "Rafter", "Plank", "Board", "Sheet", "Plywood", "Concrete", "Rebar", "Shovel", "Pickaxe", "Jackhammer", "Crane", "Hoist", "Pulley"];
+	const adjectives = ["Sturdy", "Solid", "Heavy", "Massive", "Bulky", "Rugged", "Tough", "Hardy", "Firm", "Robust", "Strong", "Mighty", "Brawny", "Stalwart", "Resilient", "Durable", "Unyielding", "Immovable", "Rigid", "Stiff", "Unbreakable", "Indestructible", "Inflexible", "Unbending", "Steadfast", "Resolute", "Unwavering", "Unshakeable", "Unflinching", "Uncompromising", "Inexorable", "Intransigent", "Adamant", "Tenacious", "Persistent", "Determined", "Resolute", "Unrelenting", "Unstoppable", "Unassailable", "Invincible", "Impregnable", "Formidable", "Dauntless", "Fearless", "Intrepid", "Valiant", "Gallant", "Heroic", "Brave"];
 
 	const adjectiveIdx = Math.floor(Math.random() * adjectives.length);
 	const nounIdx = Math.floor(Math.random() * nouns.length);
