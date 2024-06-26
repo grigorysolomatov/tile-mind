@@ -42,7 +42,7 @@ class Client { // Client data
     getNumPawnsVote()  {
 	return new Promise((resolve, reject) => {
 	    const htmlContent = [
-		'<h3>Vote for number of pawns</h3>',
+		'<h3>Vote for number of wall dudes</h3>',
 		'<button onclick="popup.resolve(2)">2</button>',
 		'<button onclick="popup.resolve(3)">3</button>',
 	    ];
