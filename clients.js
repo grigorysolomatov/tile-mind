@@ -39,6 +39,17 @@ class Client { // Client data
 
 	return `${adjective} ${noun}`;
     }
+    getNumPawnsVote()  {
+	return new Promise((resolve, reject) => {
+	    const htmlContent = [
+		`<h3>Vote for number of pawns</h3>`,
+		'<button onclick="popup.resolve(2)">2</button>',
+		'<button onclick="popup.resolve(3)">3</button>',
+	    ];
+	    const socket = sockets.getBy.socketId[this.socketId];
+	    socket.emit('dialogue', {htmlContent}, resolve);
+	});
+    }
 }
 const clients = new Indexer({
     socketId: client => client.socketId,
@@ -100,9 +111,10 @@ const clientCommands = { // Client's interface
 	    }[result.loserInfo.reason];	    
 	    const htmlContent = [
 		`<h3>${winner.name} wins!</h3>`,
-		`<p>${loser.name} ${reason}</p>`
+		`<p>${loser.name} ${reason}</p>`,
+		'<button onclick="popup.resolve()">OK</button>',
 	    ];
-	    socket.emit('alert', htmlContent);
+	    socket.emit('dialogue', {htmlContent});
 	});
     },
     rematch: (_, {clientId}) => {

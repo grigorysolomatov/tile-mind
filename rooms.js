@@ -10,21 +10,32 @@ const rooms = new Indexer({
 });
  
 class Room {
-    constructor({playerIds, settings, roomId}) {
+    constructor({playerIds, roomId}) {
 	this.playerIds = [...playerIds];
 	this.ready = [false, false]; // Ready to receive valid clicks
 	this.wantsRematch = [false, false];
-	this.settings = settings;
+	//this.settings = settings;
 	this.roomId = roomId;
     }
-    start() {
+    getNumPawnsVotes() {
+	const players = this.playerIds.map(playerId => clients.getBy.clientId[playerId]);
+	return Promise.all(
+	    players.map(player => player.getNumPawnsVote())
+	);
+    }
+    async start() {
+	const responses = await this.getNumPawnsVotes();
+	const numPawns = responses[Math.floor(Math.random()*responses.length)];
+
+	const settings = {nrows: 11, ncols: 11, numPawns};
+	
 	this.ready = [false, false];
 	this.wantsRematch = [false, false];
 	
 	if (Math.random() < 0.5) { // Randomize first player
 	    this.playerIds = [this.playerIds[1], this.playerIds[0]];
 	}
-	this.game = new game.Game(this.settings);
+	this.game = new game.Game(settings);
 	
 	const players = this.playerIds.map(playerId => clients.getBy.clientId[playerId]);
 	
@@ -33,7 +44,7 @@ class Room {
 	playerSockets.forEach((socket, i) => {
 	    socket.emit('startGame', {
 		opponent: players[1-i].name,
-		settings: this.settings,
+		settings: settings,
 		gameState: this.game.getState(),
 	    });
 	});
@@ -121,14 +132,9 @@ function init({clients: c, sockets: s}) { // Set clients & sockets
 }
 function startRoom(playerIds) {
     const players = playerIds.map(playerId => clients.getBy.clientId[playerId]);
-    
     const room = new Room({
 	playerIds: players.map(player => player.clientId),
 	roomId: uuidv4(),
-	settings: {
-	    nrows: 11,
-	    ncols: 11,	    
-	},
     });
     rooms.insert(room);        
     room.start();

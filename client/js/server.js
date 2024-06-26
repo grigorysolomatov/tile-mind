@@ -17,13 +17,13 @@ const serverCommands = { // Server's interface
     setEffects: (effects) => {
 	game.setEffects(effects);
     },
-    alert: (htmlContent) => {
-	htmlContent.push('<button onclick="popup.resolve()">OK</button>');
-	popup.show(htmlContent);
-    },
     allClients: (allClients) => {
 	document.getElementById('num-players').textContent = allClients.length;
-    }
+    },
+    dialogue: async ({htmlContent}, {callback}) => {
+	const response = await popup.show(htmlContent);
+	if (callback) {callback(response);}
+    },
 };
 export class Server { // Wrapper around socket
     constructor(socket) {
@@ -63,11 +63,6 @@ export class Server { // Wrapper around socket
     setName(name) {
 	return new Promise((resolve, reject) => {
 	    this.socket.emit('setName', {name}, resolve);
-	});
-    }
-    getResponse({type, details}) {
-	return new Promise((resolve, reject) => {
-	    this.socket.emit('getResponse', {type, details}, resolve);
 	});
     }
     gameReady() {

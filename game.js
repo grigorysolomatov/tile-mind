@@ -94,12 +94,14 @@ class HQueen {
 }
 // -----------------------------------------------------------------------------
 class Game {
-    constructor({nrows, ncols}) {
+    constructor({nrows, ncols, numPawns}) {
 	this.units = new StringyDict();
 	this.effects = new StringyDict();
 	
 	this.nrows = nrows;
 	this.ncols = ncols;
+	this.numPawns = numPawns;
+	
 	this.player = 0;
 	this.actions = 3;
 	this.selected = null;
@@ -180,53 +182,34 @@ class Game {
 	return this.loserInfo !== null;
     }
     init() {
-	const size = 3;
-	if (size === 2) {
-	    this.units.set({
-		key: {row: 1, col: 1},
-		value: new HQueen({players: [0]}),
-	    });	
-	    this.units.set({
-		key: {row: this.nrows-2, col: this.ncols-2},
-		value: new HQueen({players: [0]}),
-	    });	
-	    
-	    this.units.set({
-		key: {row: this.nrows-2, col: 1},
-		value: new HQueen({players: [1]}),
-	    });
-	    this.units.set({
-		key: {row: 1, col: this.ncols-2},
-		value: new HQueen({players: [1]}),
-	    });
-	}
-	else if (size === 3) {
+	this.units.set({
+	    key: {row: Math.floor(this.nrows/2+1), col: Math.floor(this.ncols/2+1)},
+	    value: new HQueen({players: [0]}),
+	});	
+	this.units.set({
+	    key: {row: Math.floor(this.nrows/2+1), col: Math.floor(this.ncols/2-1)},
+	    value: new HQueen({players: [0]}),
+	});
+
+	this.units.set({
+	    key: {row: Math.floor(this.nrows/2-1), col: Math.floor(this.ncols/2+1)},
+	    value: new HQueen({players: [1]}),
+	});	
+	this.units.set({
+	    key: {row: Math.floor(this.nrows/2-1), col: Math.floor(this.ncols/2-1)},
+	    value: new HQueen({players: [1]}),
+	});
+
+	if (this.numPawns === 3) {
 	    this.units.set({
 		key: {row: Math.floor(this.nrows/2+1), col: Math.floor(this.ncols/2)},
 		value: new HQueen({players: [0]}),
-	    });	
-	    this.units.set({
-		key: {row: Math.floor(this.nrows/2+1), col: Math.floor(this.ncols/2-1)},
-		value: new HQueen({players: [0]}),
 	    });
-	    this.units.set({
-		key: {row: Math.floor(this.nrows/2+1), col: Math.floor(this.ncols/2+1)},
-		value: new HQueen({players: [0]}),
-	    });
-	    
 	    this.units.set({
 		key: {row: Math.floor(this.nrows/2-1), col: Math.floor(this.ncols/2)},
 		value: new HQueen({players: [1]}),
 	    });
-	    this.units.set({
-		key: {row: Math.floor(this.nrows/2-1), col: Math.floor(this.ncols/2-1)},
-		value: new HQueen({players: [1]}),
-	    });	    
-	    this.units.set({
-		key: {row: Math.floor(this.nrows/2-1), col: Math.floor(this.ncols/2+1)},
-		value: new HQueen({players: [1]}),
-	    });
-	}			
+	}	
 
 	this.effectPlacer.box({
 	    from: {row: 0, col: 0},
