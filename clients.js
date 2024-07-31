@@ -142,11 +142,21 @@ function broadcastAllClients(io) {
 function init(io) { // Subscribe to client events
     rooms.init({clients, sockets});
     io.on('connection', socket => {
+	const originalSocketOn = socket.on.bind(socket);
+	socket.on = (...args) => { // Safe version
+	    try {
+		originalSocketOn(...args);
+	    }
+	    catch (error) {
+		console.error('Error occurred:', error);
+	    }	    
+	};
+	
 	const client = new Client({
 	    socketId: socket.id,
 	    clientId: uuidv4(),
 	    name: Client.randomName(),
-	});	
+	});
 	sockets.insert(socket);
 	clients.insert(client);
 

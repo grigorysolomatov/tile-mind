@@ -1,4 +1,4 @@
-export async function include({selector, attribute}) {
+export function include({selector, attribute}) {
     const promises = Array.from(document.querySelectorAll(selector)).map(element => {
         const otherHtmlFile = element.getAttribute(attribute);
         return fetch(otherHtmlFile)
