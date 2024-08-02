@@ -23,11 +23,21 @@ class Room {
 	    players.map(player => player.getNumPawnsVote())
 	);
     }
+    getBoardSizeVote() {
+	const players = this.playerIds.map(playerId => clients.getBy.clientId[playerId]);
+	return Promise.all(
+	    players.map(player => player.getBoardSizeVote())
+	);
+    }
     async start() {
-	const responses = await this.getNumPawnsVotes();
-	const numPawns = responses[Math.floor(Math.random()*responses.length)];
+	const responsesBoardSize = await this.getBoardSizeVote();
+	const boardSize = responsesBoardSize[Math.floor(Math.random()*responsesBoardSize.length)];
+	
+	const responsesNumPawns = await this.getNumPawnsVotes();
+	const numPawns = responsesNumPawns[Math.floor(Math.random()*responsesNumPawns.length)];
 
-	const settings = {nrows: 11, ncols: 11, numPawns};
+	// const settings = {nrows: 11, ncols: 11, numPawns};
+	const settings = {nrows: boardSize, ncols: boardSize, numPawns};
 	
 	this.ready = [false, false];
 	this.wantsRematch = [false, false];

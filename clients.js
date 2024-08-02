@@ -41,6 +41,18 @@ class Client { // Client data
 
 	return `${adjective} ${noun}`;
     }
+    getBoardSizeVote() {
+	return new Promise((resolve, reject) => {
+	    const htmlContent = [
+		'<h3>Vote for board size</h3>',
+		'<button onclick="popup.resolve(7)">7x7</button>',
+		'<button onclick="popup.resolve(9)">9x9</button>',
+		'<button onclick="popup.resolve(11)">11x11</button>',
+	    ];
+	    const socket = sockets.getBy.socketId[this.socketId];
+	    socket.emit('dialogue', {htmlContent}, resolve);
+	});
+    }
     getNumPawnsVote()  {
 	return new Promise((resolve, reject) => {
 	    const htmlContent = [
